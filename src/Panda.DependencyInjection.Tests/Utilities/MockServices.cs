@@ -1,5 +1,5 @@
 ﻿namespace Panda.DependencyInjection.Tests.Utilities;
 
-internal interface IMockService;
+internal interface IEmptyService;
 
-internal class MockService;
+internal class EmptyService : IEmptyService;

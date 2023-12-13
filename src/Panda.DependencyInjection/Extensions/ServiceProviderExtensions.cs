@@ -1,19 +1,11 @@
-﻿using Panda.DependencyInjection.Abstractions;
-using System.Runtime.CompilerServices;
-
-namespace Panda.DependencyInjection.Extensions;
+﻿namespace Panda.DependencyInjection.Extensions;
 
 public static class ServiceProviderExtensions
 {
-    public static TService? GetService<TService>(this IServiceProvider serviceProvider) where TService : class
+    public static T? GetService<T>(this IServiceProvider serviceProvider) where T : class
     {
-        TService? service = serviceProvider.GetService(typeof(TService)) as TService;
+        var service = serviceProvider.GetService(typeof(T)) as T;
 
         return service;
-    }
-
-    public static IServiceScope CreateScope(this IServiceProvider serviceProvider)
-    {
-        throw new NotImplementedException();
     }
 }

@@ -2,6 +2,4 @@
 
 namespace Panda.DependencyInjection.Abstractions;
 
-public interface IServiceCollection : IList<ServiceDescriptor>
-{
-}
+public interface IServiceCollection : IList<ServiceDescriptor>;

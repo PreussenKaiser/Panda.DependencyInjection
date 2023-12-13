@@ -3,20 +3,20 @@ namespace Panda.DependencyInjection.Containers;
 
 public sealed class ServiceProvider : IServiceProvider
 {
-    private readonly IDictionary<Type, object?> serviceDescriptors;
+    private readonly IDictionary<Type, object> builtServices;
 
-    internal ServiceProvider(IDictionary<Type, object?> serviceDescriptors)
+    internal ServiceProvider(IDictionary<Type, object> builtServices)
     {
-        this.serviceDescriptors = serviceDescriptors;
+        this.builtServices = builtServices;
     }
 
     public object? GetService(Type serviceType)
     {
-        if (serviceDescriptors.TryGetValue(serviceType, out object? value))
+        if (this.builtServices.TryGetValue(serviceType, out object? serviceInstance))
         {
-            return value;
+            return serviceInstance;
         }
 
-        throw new ArgumentOutOfRangeException(nameof(serviceType), "Specified service does not exist.");
+        throw new ArgumentOutOfRangeException(nameof(serviceType), "Could not find service.");
     }
 }

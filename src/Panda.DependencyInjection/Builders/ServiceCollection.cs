@@ -6,21 +6,16 @@ namespace Panda.DependencyInjection.Builders;
 
 public sealed class ServiceCollection : IServiceCollection
 {
-    private readonly List<ServiceDescriptor> descriptors = [];
+    private readonly List<ServiceDescriptor> serviceDescriptors = [];
     private bool isReadOnly;
 
     public ServiceDescriptor this[int index]
     {
-        get => this.descriptors[index];
-        set
-        {
-            this.CheckReadOnly();
-
-            this.descriptors[index] = value;
-        }
+        get => this.serviceDescriptors[index];
+        set => this.serviceDescriptors[index] = value;
     }
 
-    public int Count => this.descriptors.Count;
+    public int Count => this.serviceDescriptors.Count;
 
     public bool IsReadOnly => this.isReadOnly;
 
@@ -28,54 +23,54 @@ public sealed class ServiceCollection : IServiceCollection
     {
         this.CheckReadOnly();
 
-        this.descriptors.Add(item);
+        this.serviceDescriptors.Add(item);
     }
 
     public void Clear()
     {
         this.CheckReadOnly();
 
-        this.descriptors.Clear();
+        this.serviceDescriptors.Clear();
     }
 
     public bool Contains(ServiceDescriptor item)
     {
-        bool result = this.descriptors.Contains(item);
+        bool result = this.serviceDescriptors.Contains(item);
 
         return result;
     }
 
     public void CopyTo(ServiceDescriptor[] array, int arrayIndex)
     {
-        this.descriptors.CopyTo(array, arrayIndex);
+        this.serviceDescriptors.CopyTo(array, arrayIndex);
     }
 
     public IEnumerator<ServiceDescriptor> GetEnumerator()
     {
-        IEnumerator<ServiceDescriptor> enumerator = this.descriptors.GetEnumerator();
-        
+        IEnumerator<ServiceDescriptor> enumerator = this.serviceDescriptors.GetEnumerator();
+
         return enumerator;
     }
 
     public int IndexOf(ServiceDescriptor item)
     {
-        int index = this.descriptors.IndexOf(item);
+        int result = this.serviceDescriptors.IndexOf(item);
 
-        return index;
+        return result;
     }
 
     public void Insert(int index, ServiceDescriptor item)
     {
         this.CheckReadOnly();
 
-        this.descriptors.Insert(index, item);
+        this.serviceDescriptors.Insert(index, item);
     }
 
     public bool Remove(ServiceDescriptor item)
     {
         this.CheckReadOnly();
 
-        bool result = this.descriptors.Remove(item);
+        bool result = this.serviceDescriptors.Remove(item);
 
         return result;
     }
@@ -84,12 +79,12 @@ public sealed class ServiceCollection : IServiceCollection
     {
         this.CheckReadOnly();
 
-        this.descriptors.RemoveAt(index);
+        this.serviceDescriptors.RemoveAt(index);
     }
 
     IEnumerator IEnumerable.GetEnumerator()
     {
-        IEnumerator enumerator = this.GetEnumerator();
+        IEnumerator enumerator = this.serviceDescriptors.GetEnumerator();
 
         return enumerator;
     }
@@ -99,11 +94,15 @@ public sealed class ServiceCollection : IServiceCollection
         this.isReadOnly = true;
     }
 
+    /// <summary>
+    /// Throws an exception in <see cref="IsReadOnly"/> is <see langword="true"/>.
+    /// </summary>
+    /// <exception cref="InvalidOperationException"/>
     private void CheckReadOnly()
     {
         if (this.isReadOnly)
         {
-            throw new InvalidOperationException($"{nameof(ServiceCollection)} is read-only.");
+            throw new InvalidOperationException($"{nameof(ServiceCollection)} is readonly");
         }
     }
 }
