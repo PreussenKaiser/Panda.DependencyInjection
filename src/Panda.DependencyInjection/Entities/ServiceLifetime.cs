@@ -3,5 +3,5 @@
 public enum ServiceLifetime
 {
     Singleton,
-    Transient,
+    // TODO: Add transient
 }
