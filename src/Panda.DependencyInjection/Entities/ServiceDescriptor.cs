@@ -7,7 +7,7 @@ public sealed class ServiceDescriptor(Type serviceType, Type? implementationType
     /// </summary>
     public readonly Type ServiceType = serviceType;
 
-    public readonly Type? ImplementationType = implementationType;
+    public readonly Type ImplementationType = implementationType ?? serviceType;
 
     public readonly ServiceLifetime ServiceLifetime = serviceLifetime;
 }

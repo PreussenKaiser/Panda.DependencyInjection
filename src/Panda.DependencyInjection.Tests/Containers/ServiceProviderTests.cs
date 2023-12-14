@@ -1,7 +1,7 @@
 ﻿using Panda.DependencyInjection.Builders;
+using Panda.DependencyInjection.Containers;
 using Panda.DependencyInjection.Extensions;
 using Panda.DependencyInjection.Tests.Utilities;
-using System.ComponentModel.DataAnnotations;
 
 namespace Panda.DependencyInjection.Tests.Containers;
 
@@ -12,15 +12,15 @@ public sealed class ServiceProviderTests
     {
         // Arrange
         IServiceProvider serviceProvider = new ServiceCollection()
-            .AddSingleton(new EmptyService())
+            .AddSingleton(new GuidService())
             .BuildServiceProvider();
 
         // Act
-        var mockService = serviceProvider.GetService<EmptyService>();
+        var mockService = serviceProvider.GetService<GuidService>();
         
         // Assert
         Assert.NotNull(mockService);
-        Assert.IsType<EmptyService>(mockService);
+        Assert.IsType<GuidService>(mockService);
     }
 
     [Fact]
@@ -28,15 +28,15 @@ public sealed class ServiceProviderTests
     {
         // Arrange
         IServiceProvider serviceProvider = new ServiceCollection()
-            .AddSingleton<EmptyService>()
+            .AddSingleton<GuidService>()
             .BuildServiceProvider();
 
         // Act
-        var mockService = serviceProvider.GetService<EmptyService>();
+        var mockService = serviceProvider.GetService<GuidService>();
 
         // Assert
         Assert.NotNull(mockService);
-        Assert.IsType<EmptyService>(mockService);
+        Assert.IsType<GuidService>(mockService);
     }
 
     [Fact]
@@ -44,13 +44,29 @@ public sealed class ServiceProviderTests
     {
         // Arrange
         IServiceProvider serviceProvider = new ServiceCollection()
-            .AddSingleton<IEmptyService, EmptyService>()
+            .AddSingleton<IGuidService, GuidService>()
             .BuildServiceProvider();
 
         // Act
-        var emptyService = serviceProvider.GetService<IEmptyService>();
+        var emptyService = serviceProvider.GetService<IGuidService>();
 
         // Assert
-        Assert.IsAssignableFrom<IEmptyService>(emptyService);
+        Assert.IsAssignableFrom<IGuidService>(emptyService);
+    }
+
+    [Fact]
+    public void GetService_ServiceAndImplementationTypeProvided_NestedServices()
+    {
+        // Arrange
+        IServiceProvider serviceProvider = new ServiceCollection()
+            .AddSingleton<IGuidService, GuidService>()
+            .AddSingleton<ICacheService, CacheService>()
+            .BuildServiceProvider();
+
+        // Act
+        var cacheService = serviceProvider.GetService<ICacheService>();
+
+        // Assert
+        Assert.IsAssignableFrom<ICacheService>(cacheService);
     }
 }

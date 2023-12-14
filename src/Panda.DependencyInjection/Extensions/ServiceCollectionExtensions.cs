@@ -1,7 +1,6 @@
 ﻿using Panda.DependencyInjection.Abstractions;
 using Panda.DependencyInjection.Containers;
 using Panda.DependencyInjection.Entities;
-using Panda.DependencyInjection.Utilities;
 
 namespace Panda.DependencyInjection.Extensions;
 
@@ -32,7 +31,7 @@ public static class ServiceCollectionExtensions
     public static IServiceCollection AddSingleton<TService, TImplementation>(this IServiceCollection services)
         where TImplementation : TService
     {
-        var serviceDescriptor = new ServiceDescriptor(typeof(TService), null, ServiceLifetime.Singleton);
+        var serviceDescriptor = new ServiceDescriptor(typeof(TService), typeof(TImplementation), ServiceLifetime.Singleton);
 
         services.Add(serviceDescriptor);
 
@@ -41,12 +40,9 @@ public static class ServiceCollectionExtensions
 
     public static IServiceProvider BuildServiceProvider(this IServiceCollection services)
     {
-        IDictionary<Type, object> builtServices = services
-            .ToDictionary(
-                s => s.ServiceType,
-                s => ActivatorUtilities.CreateInstance(s.ImplementationType));
+        ArgumentNullException.ThrowIfNull(services, nameof(services));
 
-        var serviceProvider = new ServiceProvider(builtServices);
+        var serviceProvider = new ServiceProvider(services);
 
         return serviceProvider;
     }
